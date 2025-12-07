@@ -1,0 +1,177 @@
+[
+  {
+    "id": "1765102976878",
+    "image_name": "eye 1.png",
+    "disease_detected": "Uveitis",
+    "confidence_score": 94.56,
+    "timestamp": "2025-12-07T10:22:56.878Z"
+  },
+  {
+    "id": "1765103017722",
+    "image_name": "eye image.png",
+    "disease_detected": "Cataract",
+    "confidence_score": 62.74,
+    "timestamp": "2025-12-07T10:23:37.722Z"
+  },
+  {
+    "id": "1765103656746",
+    "image_name": "eye 1.png",
+    "disease_detected": "Uveitis",
+    "confidence_score": 94.56,
+    "timestamp": "2025-12-07T10:34:16.746Z"
+  },
+  {
+    "id": "1765104002830",
+    "image_name": "eye 1.png",
+    "disease_detected": "Uveitis",
+    "confidence_score": 94.56,
+    "timestamp": "2025-12-07T10:40:02.830Z"
+  },
+  {
+    "id": "1765104540415",
+    "image_name": "eye 1.png",
+    "disease_detected": "Uveitis",
+    "confidence_score": 94.56,
+    "timestamp": "2025-12-07T10:49:00.415Z"
+  },
+  {
+    "id": "1765104816614",
+    "image_name": "eye 1.png",
+    "disease_detected": "Uveitis",
+    "confidence_score": 94.56,
+    "timestamp": "2025-12-07T10:53:36.614Z"
+  },
+  {
+    "id": "1765105102376",
+    "image_name": "eye 1.png",
+    "disease_detected": "Uveitis",
+    "confidence_score": 94.56,
+    "timestamp": "2025-12-07T10:58:22.376Z"
+  },
+  {
+    "id": "1765106202816",
+    "image_name": "eye 1.png",
+    "disease_detected": "Uveitis",
+    "confidence_score": 94.56,
+    "timestamp": "2025-12-07T11:16:42.816Z"
+  },
+  {
+    "id": "1765106292383",
+    "image_name": "eye 1.png",
+    "disease_detected": "Uveitis",
+    "confidence_score": 94.56,
+    "timestamp": "2025-12-07T11:18:12.383Z"
+  },
+  {
+    "id": "1765120221482",
+    "image_name": "uveitis.jpg",
+    "disease_detected": "Conjunctivitis",
+    "confidence_score": 85.74,
+    "timestamp": "2025-12-07T15:10:21.482Z"
+  },
+  {
+    "id": "1765120239152",
+    "image_name": "cataract1.jpg",
+    "disease_detected": "Normal",
+    "confidence_score": 96.22,
+    "timestamp": "2025-12-07T15:10:39.152Z"
+  },
+  {
+    "id": "1765120264798",
+    "image_name": "catarect eye.png",
+    "disease_detected": "Normal",
+    "confidence_score": 99.58,
+    "timestamp": "2025-12-07T15:11:04.798Z"
+  },
+  {
+    "id": "1765120457724",
+    "image_name": "cataract1.jpg",
+    "disease_detected": "Normal",
+    "confidence_score": 96.22,
+    "timestamp": "2025-12-07T15:14:17.724Z"
+  },
+  {
+    "id": "1765120473729",
+    "image_name": "cataract3.jpg",
+    "disease_detected": "Normal",
+    "confidence_score": 93.02,
+    "timestamp": "2025-12-07T15:14:33.729Z"
+  },
+  {
+    "id": "1765120514757",
+    "image_name": "conjuncitivitis1.jpg",
+    "disease_detected": "Cataract",
+    "confidence_score": 96.24,
+    "timestamp": "2025-12-07T15:15:14.757Z"
+  },
+  {
+    "id": "1765120609728",
+    "image_name": "uveitis2.jpg",
+    "disease_detected": "Uveitis",
+    "confidence_score": 72.58,
+    "timestamp": "2025-12-07T15:16:49.728Z"
+  },
+  {
+    "id": "1765120665465",
+    "image_name": "uveitis2.jpg",
+    "disease_detected": "Uveitis",
+    "confidence_score": 72.58,
+    "timestamp": "2025-12-07T15:17:45.465Z"
+  },
+  {
+    "id": "1765120679796",
+    "image_name": "uveitis1.jpg",
+    "disease_detected": "Uveitis",
+    "confidence_score": 70.33,
+    "timestamp": "2025-12-07T15:17:59.796Z"
+  },
+  {
+    "id": "1765120700426",
+    "image_name": "cataract3.jpg",
+    "disease_detected": "Normal",
+    "confidence_score": 93.02,
+    "timestamp": "2025-12-07T15:18:20.426Z"
+  },
+  {
+    "id": "1765120717947",
+    "image_name": "cataract1.jpg",
+    "disease_detected": "Normal",
+    "confidence_score": 96.22,
+    "timestamp": "2025-12-07T15:18:37.947Z"
+  },
+  {
+    "id": "1765120736307",
+    "image_name": "catarect1.png",
+    "disease_detected": "Normal",
+    "confidence_score": 98.24,
+    "timestamp": "2025-12-07T15:18:56.307Z"
+  },
+  {
+    "id": "1765120749639",
+    "image_name": "cataract.jpg",
+    "disease_detected": "Normal",
+    "confidence_score": 99.49,
+    "timestamp": "2025-12-07T15:19:09.639Z"
+  },
+  {
+    "id": "1765120767072",
+    "image_name": "Eyelid.jpg",
+    "disease_detected": "Conjunctivitis",
+    "confidence_score": 96.99,
+    "timestamp": "2025-12-07T15:19:27.072Z"
+  },
+  {
+    "id": "1765120779680",
+    "image_name": "Eyelid1.jpg",
+    "disease_detected": "Conjunctivitis",
+    "confidence_score": 99.27,
+    "timestamp": "2025-12-07T15:19:39.680Z"
+  },
+  {
+    "id": "1765120792162",
+    "image_name": "conjuncitivitis1.jpg",
+    "disease_detected": "Cataract",
+    "confidence_score": 96.24,
+    "timestamp": "2025-12-07T15:19:52.162Z"
+  }
+]
