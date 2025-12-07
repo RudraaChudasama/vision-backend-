@@ -6,19 +6,53 @@ import numpy as np
 import base64
 import json
 import os
+import requests
 from datetime import datetime
 
+# ==============================================
+# 1️⃣ GOOGLE DRIVE DIRECT DOWNLOAD URL
+# ==============================================
+MODEL_URL = "https://drive.google.com/uc?export=download&id=1n5gVMkh9471E_Y_4SmWzbGZOu26OTvy8"
+MODEL_PATH = "best.pt"
+
 app = Flask(__name__)
-CORS(app)  # Allow frontend to connect
+CORS(app)
 
-# Load your YOLO model
-MODEL_PATH = 'best.pt'  # Make sure your model file is here
+# ==============================================
+# 2️⃣ DOWNLOAD MODEL IF MISSING
+# ==============================================
+def download_model():
+    if os.path.exists(MODEL_PATH):
+        print("✅ best.pt already exists.")
+        return
+    
+    print("📥 Downloading model from Google Drive…")
+    response = requests.get(MODEL_URL)
+
+    if response.status_code == 200:
+        with open(MODEL_PATH, "wb") as f:
+            f.write(response.content)
+        print("✅ Model downloaded successfully!")
+    else:
+        print("❌ Failed to download model:", response.text)
+
+
+# Download the model before loading YOLO
+download_model()
+
+# ==============================================
+# 3️⃣ LOAD YOLO MODEL
+# ==============================================
+print("⚡ Loading YOLO model…")
 model = YOLO(MODEL_PATH)
+print("✅ YOLO Model Loaded Successfully!")
 
-# Database file
+# ==============================================
+# DATABASE FILE
+# ==============================================
 DATABASE_FILE = 'database.json'
 
-# Disease name mapping (adjust based on your model)
+# Disease mapping
 DISEASE_CLASSES = {
     0: 'Normal',
     1: 'Cataract',
@@ -27,15 +61,14 @@ DISEASE_CLASSES = {
     4: 'Uveitis'
 }
 
-
-# Initialize database file if it doesn't exist
+# ==============================================
+# DATABASE UTILITIES
+# ==============================================
 def init_database():
     if not os.path.exists(DATABASE_FILE):
         with open(DATABASE_FILE, 'w') as f:
             json.dump([], f)
 
-
-# Load records from database
 def load_records():
     try:
         with open(DATABASE_FILE, 'r') as f:
@@ -43,151 +76,123 @@ def load_records():
     except:
         return []
 
-
-# Save records to database
 def save_records(records):
     with open(DATABASE_FILE, 'w') as f:
         json.dump(records, f, indent=2)
 
 
-# Convert base64 image to OpenCV format
+# ==============================================
+# IMAGE DECODE FUNCTION
+# ==============================================
 def base64_to_image(base64_string):
-    # Remove header if present
     if ',' in base64_string:
         base64_string = base64_string.split(',')[1]
     
-    # Decode base64
     img_data = base64.b64decode(base64_string)
     nparr = np.frombuffer(img_data, np.uint8)
     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
     return img
 
 
-# ====== API ENDPOINTS ======
+# ==============================================
+# API ROUTES
+# ==============================================
 
 @app.route('/health', methods=['GET'])
 def health_check():
-    """Check if server is running"""
-    return jsonify({'status': 'ok', 'message': 'Backend is running'}), 200
+    return jsonify({'status': 'ok', 'message': 'Backend running'}), 200
 
 
 @app.route('/detect', methods=['POST'])
 def detect_disease():
-    """Detect eye disease from image"""
     try:
         data = request.get_json()
-        
+
         if 'image' not in data:
             return jsonify({'success': False, 'error': 'No image provided'}), 400
         
-        # Convert base64 image to OpenCV format
         img = base64_to_image(data['image'])
-        
-        # Run YOLO detection
+
         results = model(img)
-        
-        # Get the best detection
+
         if len(results[0].boxes) > 0:
-            # Get class with highest confidence
             boxes = results[0].boxes
-            confidences = boxes.conf.cpu().numpy()
+            confs = boxes.conf.cpu().numpy()
             classes = boxes.cls.cpu().numpy()
-            
-            best_idx = np.argmax(confidences)
+
+            best_idx = np.argmax(confs)
             best_class = int(classes[best_idx])
-            best_confidence = float(confidences[best_idx]) * 100
-            
-            disease_name = DISEASE_CLASSES.get(best_class, 'Unknown')
-            
+            best_conf = float(confs[best_idx] * 100)
+
+            disease = DISEASE_CLASSES.get(best_class, "Unknown")
+
             return jsonify({
-                'success': True,
-                'disease': disease_name,
-                'confidence': round(best_confidence, 2)
-            }), 200
+                "success": True,
+                "disease": disease,
+                "confidence": round(best_conf, 2)
+            })
+
         else:
-            # No detection - assume normal
             return jsonify({
-                'success': True,
-                'disease': 'Normal',
-                'confidence': 95.0
-            }), 200
-            
+                "success": True,
+                "disease": "Normal",
+                "confidence": 95.0
+            })
+
     except Exception as e:
-        print(f"Detection error: {str(e)}")
-        return jsonify({
-            'success': False,
-            'error': str(e)
-        }), 500
+        print("Detection error:", str(e))
+        return jsonify({"success": False, "error": str(e)}), 500
 
 
 @app.route('/save', methods=['POST'])
 def save_record():
-    """Save detection record to database"""
     try:
         record = request.get_json()
-        
-        # Validate required fields
-        required_fields = ['id', 'image_name', 'disease_detected', 'confidence_score', 'timestamp']
-        for field in required_fields:
+
+        required = ['id', 'image_name', 'disease_detected', 'confidence_score', 'timestamp']
+        for field in required:
             if field not in record:
                 return jsonify({'success': False, 'error': f'Missing field: {field}'}), 400
-        
-        # Load existing records
+
         records = load_records()
-        
-        # Add new record
         records.append(record)
-        
-        # Save to database
         save_records(records)
-        
-        return jsonify({'success': True, 'message': 'Record saved'}), 200
-        
+
+        return jsonify({"success": True, "message": "Record saved"})
+
     except Exception as e:
-        print(f"Save error: {str(e)}")
-        return jsonify({'success': False, 'error': str(e)}), 500
+        print("Save error:", str(e))
+        return jsonify({"success": False, "error": str(e)})
 
 
 @app.route('/records', methods=['GET'])
 def get_all_records():
-    """Get all detection records"""
     try:
-        records = load_records()
-        return jsonify({'success': True, 'records': records}), 200
+        return jsonify({"success": True, "records": load_records()})
     except Exception as e:
-        print(f"Get records error: {str(e)}")
-        return jsonify({'success': False, 'error': str(e)}), 500
+        return jsonify({"success": False, "error": str(e)})
 
 
 @app.route('/delete/<record_id>', methods=['DELETE'])
 def delete_record(record_id):
-    """Delete a specific record"""
     try:
         records = load_records()
-        
-        # Filter out the record to delete
-        updated_records = [r for r in records if r['id'] != record_id]
-        
-        if len(updated_records) == len(records):
-            return jsonify({'success': False, 'error': 'Record not found'}), 404
-        
-        # Save updated records
-        save_records(updated_records)
-        
-        return jsonify({'success': True, 'message': 'Record deleted'}), 200
-        
+        new_records = [r for r in records if r['id'] != record_id]
+
+        if len(new_records) == len(records):
+            return jsonify({"success": False, "error": "Record not found"}), 404
+
+        save_records(new_records)
+        return jsonify({"success": True, "message": "Record deleted"})
+
     except Exception as e:
-        print(f"Delete error: {str(e)}")
-        return jsonify({'success': False, 'error': str(e)}), 500
+        return jsonify({"success": False, "error": str(e)})
 
 
+# ==============================================
+# RUN SERVER
+# ==============================================
 if __name__ == '__main__':
-    print("🚀 Starting Eye Disease Detection Backend...")
-    print("📡 Server will run on: http://localhost:5000")
-    print("🔧 Make sure your YOLO model (best.pt) is in this folder")
-    print("")
-    
-    # Initialize database
+    print("🚀 Backend starting on http://localhost:5000 …")
     init_database()
-    
- 
+    app.run(host="0.0.0.0", port=5000)
